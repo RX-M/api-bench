@@ -9,22 +9,20 @@ from OpenSourceProjects import Projects
 from OpenSourceProjects import ttypes
 
 class ProjectHandler(Projects.Iface):
+
+    def __init__(self):
+        self.projects = {}
+
     def get(self, name):
-        p = ttypes.Project()
-        p.name = name
-        p.host = "ASF"
-        p.inception = ttypes.Date()
-        p.inception.year = 2007
-        p.inception.month = 1
-        p.inception.day = 10
-        return p
+        try:
+            return self.projects[name]
+	except KeyError:
+	    print("No project called %s was found" %name)
+            return ttypes.Project()
 
     def create(self, p):
-        """
-        Parameters:
-         - p
-        """
-        pass
+        self.projects[p.name] = p
+        return p
 
 
 handler = ProjectHandler()
