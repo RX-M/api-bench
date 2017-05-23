@@ -10,18 +10,19 @@ from OpenSourceProjects import ttypes
 
 class ProjectHandler(Projects.Iface):
 
-    def __init__(self):
-        self.projects = {}
+    #def __init__(self):
+        #self.projects = {}
 
     def get(self, name):
-        try:
-            return self.projects[name]
-	except KeyError:
-	    print("No project called %s was found" %name)
-            return ttypes.Project()
+	return ttypes.Project()
+        #try:
+            #return self.projects[name]
+	#except KeyError:
+	    #print("No project called %s was found" %name)
+            #return ttypes.Project()
 
     def create(self, p):
-        self.projects[p.name] = p
+        #self.projects[p.name] = p
         return p
 
 
