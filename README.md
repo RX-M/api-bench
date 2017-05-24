@@ -8,3 +8,21 @@ $ docker run -v ~/linuxcon/loadtest/project.thrift:/project.thrift -v ~/linuxcon
 
 $ chown -R user *
 ```
+
+## Client
+
+All client programs must be named `client` and accept a server ip and port on the command line.
+
+```
+$ client 10.4.6.2 9090
+```
+
+If no command line arguments are provided, the client should use localhost and port 9090. All client project files for a given language must be in a directory named ./[lang]-cli. For example: `python-cli`.
+
+
+## Server
+
+All server programs must be named `server` and all servers must listen on port 9090 on all interfaces. All server project files for a given language must be in a directory named ./[lang]-svr. For example: `python-svr`.
+
+
+
