@@ -23,11 +23,11 @@ class ProjectHandler(Projects.Iface):
         p.inception.month = 1
         p.inception.day = 10
         return p
-	#return ttypes.Project()
+    #return ttypes.Project()
         #try:
             #return self.projects[name]
-	#except KeyError:
-	    #print("No project called %s was found" %name)
+    #except KeyError:
+        #print("No project called %s was found" %name)
             #return ttypes.Project()
 
     def create(self, p):
@@ -46,4 +46,3 @@ server = TServer.TThreadedServer(proc, trans_svr, trans_fac, proto_fac)
 
 print("[Server] Listening on port ", args['port'])
 server.serve()
-

@@ -7,7 +7,7 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TCompactProtocol
 from OpenSourceProjects import Projects
-from OpenSourceProjects import ttypes    
+from OpenSourceProjects import ttypes
 
 # ----------------- Helper function for testing ------------------------
 def make_project(name, host, day, month, year):
@@ -46,22 +46,12 @@ def create_test(client):
     return end - start
 
 
-# -------------------1 million create() then get()-----------------------#
-def get_create_test(client):
-	trans = TSocket.TSocket(host, port)
-	trans = TTransport.TBufferedTransport(trans)
-	proto = TCompactProtocol.TCompactProtocol(trans)
-	client = Projects.Client(proto)
-	trans.open()
-
-
 # -------------------1 million get() then create()-----------------------#
 def get_create_test(client):
-	p = make_project("Thrift", "AFS", 10, 1, 2007)
 	start = time.time()
 	
 	for i in range(requests):
-		
+		p = make_project("Thrift", "AFS", 10, 1, 2007)
 		client.create(p)
 		client.get("Thrift")
 	
@@ -70,14 +60,6 @@ def get_create_test(client):
 	return end - start
 
 #---------------Call the appropriate test based on user input------------#
-
-if (action == 1):
-	print("Time to get() %d times: %s" % (requests, get_test()))
-elif (action == 2):
-	print("Time to create() %d times: %s" % (requests, create_test()))
-else:
-	print("Time to create() then get() %d times: %s" % 
-		 (requests, get_create_test()))
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-H', '--host', default='localhost')
@@ -101,4 +83,3 @@ if __name__ == "__main__":
         print("Time to create() then get() %d times: %s" % (requests, get_create_test(client)))
 
     trans.close()
-
