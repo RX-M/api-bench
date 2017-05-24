@@ -36,6 +36,7 @@ class ProjectHandler(Projects.Iface):
 
     def create(self, project):
         """Creates a trivial result"""
+        #pylint: disable=unused-argument
         #self.projects[p.name] = p
         return ttypes.CreateResult(42, "sucess")
 
