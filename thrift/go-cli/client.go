@@ -6,23 +6,23 @@ import (
 	"OpenSourceProjects"
 )
 
-type ProjectsHandler struct {
-}
-
-func (ph ProjectsHandler) Get(name string) (r *OpenSourceProjects.Project, err error) {
-	return
-}
-
-func (ph ProjectsHandler) Create(p *OpenSourceProjects.Project) (r *OpenSourceProjects.CreateResult_, err error) {
-	return
-}
-
 func main() {
 	addr := "localhost:9090"
-        handler := ProjectsHandler{}
-        processor := OpenSourceProjects.NewProjectsProcessor(handler)
-	protocolFactory := thrift.NewTCompactProtocolFactory()
+	transport, err := thrift.NewTSocket(addr)
+	if err != nil {
+		fmt.Println("Error creating socket:", err)
+		return
+	}
 	transportFactory := thrift.NewTBufferedTransportFactory(8192)
+	transport = transportFactory.GetTransport(transport)
+	defer transport.Close()
+	if err := transport.Open(); err != nil {
+		fmt.Println("Error opening socket:", err)
+		return
+	}
+	protocolFactory := thrift.NewTCompactProtocolFactory()
+	client := OpenSourceProjects.NewProjectsClientFactory(transport, protocolFactory)
+
         transport, err := thrift.NewTServerSocket(addr)
         if err != nil {
 		fmt.Println(err)

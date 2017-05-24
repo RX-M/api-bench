@@ -1,5 +1,6 @@
 import sys
 sys.path.append("gen-py")
+import argparse
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -33,17 +34,16 @@ class ProjectHandler(Projects.Iface):
         #self.projects[p.name] = p
         return ttypes.CreateResult(42, "sucess")
 
-p = raw_input("Enter a port number (press enter for 9090) ")
-if (p == ""): p = 9090
-else: p = int(p)
-print("You have selected port %d" %p) 
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--port', default='9090')
+args = vars(parser.parse_args())
 handler = ProjectHandler()
 proc = Projects.Processor(handler)
-trans_svr = TSocket.TServerSocket(port=p)
+trans_svr = TSocket.TServerSocket(port=args['port'])
 trans_fac = TTransport.TBufferedTransportFactory()
 proto_fac = TCompactProtocol.TCompactProtocolFactory()
 server = TServer.TThreadedServer(proc, trans_svr, trans_fac, proto_fac)
 
-print("[Server] Started")
+print("[Server] Listening on port ", args['port'])
 server.serve()
 
