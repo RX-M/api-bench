@@ -24,5 +24,5 @@ struct CreateResult {
 
 service Projects {
     Project get(1: string name)
-    CreateResult create(1: Project p)
+    CreateResult create(1: Project proj)
 }

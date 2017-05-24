@@ -24,5 +24,26 @@ If no command line arguments are provided, the client should use localhost and p
 
 All server programs must be named `server` and all servers must listen on port 9090 on all interfaces. All server project files for a given language must be in a directory named ./[lang]-svr. For example: `python-svr`.
 
+In response to get() all servers should return data identical to the following:
 
+```python
+    def get(self, name):
+        p = ttypes.Project()
+        p.name = name
+        p.host = "ASF"
+        p.inception = ttypes.Date()
+        p.inception.year = 2007
+        p.inception.month = 1
+        p.inception.day = 10
+        return p
 
+```
+
+In response to create() servers should return data identical to the following:
+
+```python
+    def create(self, p):
+        #self.projects[p.name] = p
+        return CreateResult(42, "sucess")
+
+```

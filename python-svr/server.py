@@ -1,5 +1,5 @@
 import sys
-sys.path.append("../out/gen-py")
+sys.path.append("/gen-py")
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -14,7 +14,15 @@ class ProjectHandler(Projects.Iface):
         #self.projects = {}
 
     def get(self, name):
-	return ttypes.Project()
+        p = ttypes.Project()
+        p.name = name
+        p.host = "ASF"
+        p.inception = ttypes.Date()
+        p.inception.year = 2007
+        p.inception.month = 1
+        p.inception.day = 10
+        return p
+	#return ttypes.Project()
         #try:
             #return self.projects[name]
 	#except KeyError:
@@ -23,7 +31,7 @@ class ProjectHandler(Projects.Iface):
 
     def create(self, p):
         #self.projects[p.name] = p
-        return p
+        return CreateResult(42, "sucess")
 
 
 handler = ProjectHandler()
