@@ -1,0 +1,5 @@
+FROM python:2.7.13-alpine
+RUN pip install thrift
+COPY ./gen-py /gen-py
+COPY client.py /
+CMD python /client.py
