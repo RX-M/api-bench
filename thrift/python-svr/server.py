@@ -1,3 +1,5 @@
+"""Server that handles requests"""
+from __future__ import print_function
 import sys
 sys.path.append("gen-py")
 import argparse
@@ -10,40 +12,43 @@ from OpenSourceProjects import Projects
 from OpenSourceProjects import ttypes
 
 class ProjectHandler(Projects.Iface):
+    """Implements the methods defined in project.thrift"""
 
     #def __init__(self):
         #self.projects = {}
 
     def get(self, name):
-        p = ttypes.Project()
-        p.name = name
-        p.host = "ASF"
-        p.inception = ttypes.Date()
-        p.inception.year = 2007
-        p.inception.month = 1
-        p.inception.day = 10
-        return p
-	#return ttypes.Project()
+        """Returns a new project with the given name"""
+        project = ttypes.Project()
+        project.name = name
+        project.host = "ASF"
+        project.inception = ttypes.Date()
+        project.inception.year = 2007
+        project.inception.month = 1
+        project.inception.day = 10
+        return project
+    #return ttypes.Project()
         #try:
             #return self.projects[name]
-	#except KeyError:
-	    #print("No project called %s was found" %name)
+    #except KeyError:
+        #print("No project called %s was found" %name)
             #return ttypes.Project()
 
-    def create(self, p):
+    def create(self, project):
+        """Creates a trivial result"""
+        #pylint: disable=unused-argument
         #self.projects[p.name] = p
         return ttypes.CreateResult(42, "sucess")
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-p', '--port', default='9090')
-args = vars(parser.parse_args())
-handler = ProjectHandler()
-proc = Projects.Processor(handler)
-trans_svr = TSocket.TServerSocket(port=args['port'])
-trans_fac = TTransport.TBufferedTransportFactory()
-proto_fac = TCompactProtocol.TCompactProtocolFactory()
-server = TServer.TThreadedServer(proc, trans_svr, trans_fac, proto_fac)
+PARSER = argparse.ArgumentParser()
+PARSER.add_argument('-p', '--port', default='9090')
+ARGS = vars(PARSER.parse_args())
+HANDLER = ProjectHandler()
+PROC = Projects.Processor(HANDLER)
+TRANS_SVR = TSocket.TServerSocket(port=ARGS['port'])
+TRANS_FAC = TTransport.TBufferedTransportFactory()
+PROTO_FAC = TCompactProtocol.TCompactProtocolFactory()
+SERVER = TServer.TThreadedServer(PROC, TRANS_SVR, TRANS_FAC, PROTO_FAC)
 
-print("[Server] Listening on port ", args['port'])
-server.serve()
-
+print("[Server] Listening on port " + ARGS['port'])
+SERVER.serve()

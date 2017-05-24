@@ -1,6 +1,7 @@
+"""Client that makes requests from server"""
+from __future__ import print_function
 import sys
 import time
-import random
 sys.path.append("gen-py")
 import argparse
 from thrift.transport import TSocket
@@ -11,75 +12,65 @@ from OpenSourceProjects import ttypes
 
 # ----------------- Helper function for testing ------------------------
 def make_project(name, host, day, month, year):
-	p = ttypes.Project()
-	p.name = name
-	p.host = host
-	p.inception = ttypes.Date()
-	p.inception.year = year
-	p.inception.month = month
-	p.inception.day = day
-	return p
+    """Creates a new project object"""
+    project = ttypes.Project()
+    project.name = name
+    project.host = host
+    project.inception = ttypes.Date()
+    project.inception.year = year
+    project.inception.month = month
+    project.inception.day = day
+    return project
 
 # Change number of requests here
-requests = 1000000
+REQUESTS = 1000000
 
 # ----------------------------1 million get()----------------------------#
 def get_test(client):
-	start = time.time()
-	
-	for i in range(requests):
-		client.get("Thrift")
-	
-	end = time.time()
-
-	return end - start
-
-
-# --------------------------1 million create()---------------------------#
-def create_test(client):
-    p = make_project("Thrift", "AFS", 10, 1, 2007)
-    start = time.time()	
-    for i in range(requests):
-        client.create(p)
-
+    """Calls get() 1 million times"""
+    start = time.time()
+    for _ in range(REQUESTS):
+        client.get("Thrift")
     end = time.time()
     return end - start
 
+# --------------------------1 million create()---------------------------#
+def create_test(client):
+    """Calls create() 1 million times"""
+    project = make_project("Thrift", "AFS", 10, 1, 2007)
+    start = time.time()
+    for _ in range(REQUESTS):
+        client.create(project)
+    end = time.time()
+    return end - start
 
 # -------------------1 million get() then create()-----------------------#
 def get_create_test(client):
-	start = time.time()
-	
-	for i in range(requests):
-		p = make_project("Thrift", "AFS", 10, 1, 2007)
-		client.create(p)
-		client.get("Thrift")
-	
-	end = time.time()
-
-	return end - start
+    """Calls create(), then get() 1 million times"""
+    start = time.time()
+    for _ in range(REQUESTS):
+        project = make_project("Thrift", "AFS", 10, 1, 2007)
+        client.create(project)
+        client.get("Thrift")
+    end = time.time()
+    return end - start
 
 #---------------Call the appropriate test based on user input------------#
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-H', '--host', default='localhost')
-    parser.add_argument('-p', '--port', default='9090')
-    parser.add_argument('-a', '--action', default='1')
-    args = vars(parser.parse_args())
-
-    print("[Client] Host %s, Port %s, Action %s" %(args['host'], args['port'], args['action']))      
-
-    trans = TSocket.TSocket(args['host'], args['port'])
-    trans = TTransport.TBufferedTransport(trans)
-    proto = TCompactProtocol.TCompactProtocol(trans)
-    client = Projects.Client(proto)
-    trans.open()
-
-    if (args['action'] == '1'):
-        print("Time to get() %d times: %s" % (requests, get_test(client)))
-    elif (args['action'] == '2'):
-        print("Time to create() %d times: %s" % (requests, create_test(client)))
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument('-H', '--host', default='localhost')
+    PARSER.add_argument('-p', '--port', default='9090')
+    PARSER.add_argument('-a', '--action', default='1')
+    ARGS = vars(PARSER.parse_args())
+    print("[Client] Host %s, Port %s, Action %s" %(ARGS['host'], ARGS['port'], ARGS['action']))
+    TRANS = TTransport.TBufferedTransport(TSocket.TSocket(ARGS['host'], ARGS['port']))
+    PROTO = TCompactProtocol.TCompactProtocol(TRANS)
+    CLIENT = Projects.Client(PROTO)
+    TRANS.open()
+    if ARGS['action'] == '1':
+        print("Time to get() %d times: %s" % (REQUESTS, get_test(CLIENT)))
+    elif ARGS['action'] == '2':
+        print("Time to create() %d times: %s" % (REQUESTS, create_test(CLIENT)))
     else:
-        print("Time to create() then get() %d times: %s" % (requests, get_create_test(client)))
-
-    trans.close()
+        print("Time to create() then get() %d times: %s" % (REQUESTS, get_create_test(CLIENT)))
+    TRANS.close()

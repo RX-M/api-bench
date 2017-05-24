@@ -2,4 +2,4 @@ FROM python:2.7.13-alpine
 RUN pip install thrift
 COPY ./gen-py /gen-py
 COPY server.py /
-CMD python /server.py
+ENTRYPOINT ["/usr/local/bin/python", "/server.py"]
