@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"OpenSourceProjects"
 )
@@ -10,7 +11,9 @@ type ProjectsHandler struct {
 }
 
 func (ph ProjectsHandler) Get(name string) (r *OpenSourceProjects.Project, err error) {
-	return
+	d := OpenSourceProjects.Date{2007,1,10}
+	p := OpenSourceProjects.Project{name, "ASF", &d}
+	return &p, nil
 }
 
 func (ph ProjectsHandler) Create(p *OpenSourceProjects.Project) (r *OpenSourceProjects.CreateResult_, err error) {
@@ -18,7 +21,10 @@ func (ph ProjectsHandler) Create(p *OpenSourceProjects.Project) (r *OpenSourcePr
 }
 
 func main() {
-	addr := "localhost:9090"
+	addr := "0.0.0.0:9090"
+	if len(os.Args) == 2 {
+		addr = "0.0.0.0:" + os.Args[1]
+	}
         handler := ProjectsHandler{}
         processor := OpenSourceProjects.NewProjectsProcessor(handler)
 	protocolFactory := thrift.NewTCompactProtocolFactory()
@@ -28,7 +34,6 @@ func main() {
 		fmt.Println(err)
                 return
         }
-        fmt.Printf("%T\n", transport)
         server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
         fmt.Println("Starting the server... on ", addr)
         server.Serve()
