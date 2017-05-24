@@ -1,0 +1,75 @@
+---
+  swagger: "2.0"
+  info:
+    version: "1.0.0"
+    title: "Open Source Porjects"
+    description: "A simple test API for various API systems"
+    contact:
+      name: "RX-M.io"
+    license:
+      name: "Apache 2.0"
+  host: "rx-m.net"
+  basePath: "/api"
+  schemes:
+    - "http"
+  consumes:
+    - "application/json"
+  produces:
+    - "application/json"
+  paths:
+    /projects:
+      get:
+        description: "Returns all projects from the system"
+        produces:
+          - "application/json"
+        responses:
+          "200":
+            description: "A list of projects."
+            schema:
+              type: "array"
+              items:
+                $ref: "#/definitions/Project"
+    /projects/{name}:
+      get:
+        description: "Returns a single project"
+        operationId: "findProjectByName"
+        produces:
+          - "application/json"
+        parameters:
+          -
+            name: "name"
+            in: "path"
+            description: "Name of project to fetch"
+            required: true
+            type: "string"
+            format: "utf8"
+        responses:
+          "200":
+            description: "project response"
+            schema:
+              $ref: "#/definitions/Project"
+          default:
+            description: "unexpected error"
+            schema:
+              $ref: "#/definitions/ErrorModel"
+  definitions:
+    Project:
+      type: "object"
+      required:
+        - "name"
+      properties:
+        name:
+          type: "string"
+        host:
+          type: "string"
+    ErrorModel:
+      type: "object"
+      required:
+        - "code"
+        - "message"
+      properties:
+        code:
+          type: "integer"
+          format: "int16"
+        message:
+          type: "string"
