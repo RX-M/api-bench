@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  pyapp:
+    image: randyabernethy/somerepo
+    deploy:
+      replicas: 10
+      restart_policy:
+        condition: never
+    network_mode: "host"
+    command: [localhost, 9090]
