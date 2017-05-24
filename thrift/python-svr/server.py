@@ -33,10 +33,13 @@ class ProjectHandler(Projects.Iface):
         #self.projects[p.name] = p
         return ttypes.CreateResult(42, "sucess")
 
-
+p = raw_input("Enter a port number (press enter for 9090) ")
+if (p == ""): p = 9090
+else: p = int(p)
+print("You have selected port %d" %p) 
 handler = ProjectHandler()
 proc = Projects.Processor(handler)
-trans_svr = TSocket.TServerSocket(port=9090)
+trans_svr = TSocket.TServerSocket(port=p)
 trans_fac = TTransport.TBufferedTransportFactory()
 proto_fac = TCompactProtocol.TCompactProtocolFactory()
 server = TServer.TThreadedServer(proc, trans_svr, trans_fac, proto_fac)
