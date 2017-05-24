@@ -40,12 +40,16 @@ while (not is_valid_port(port)):
 
 while (not is_valid_action(action)):
 	print("Press enter to select 1")
-	action = raw_input("Enter 1 for get(), 2 for create(), or 3 for create() followed by get(): ")
+	msg = "Enter 1 for get(), 2 for create(), or 3 for create()" + 
+		  "followed by get(): "
+	action = raw_input(msg)
 	if (action == ""):
 		action = 1
 		break
 
-print("You have selected %s for host, %s for port, and %s for action" %(host, port, action))      
+print("You have selected %s for host, %s for port, and %s for action" % 
+	 (host, port, action))      
+
 
 # ----------------- Helper function for testing ------------------------
 def make_project(name, host, day, month, year):
@@ -109,7 +113,7 @@ def create_test():
 	return end - start
 
 
-# -------------------1 million get() then create()-----------------------#
+# -------------------1 million create() then get()-----------------------#
 def get_create_test():
 	trans = TSocket.TSocket(host, port)
 	trans = TTransport.TBufferedTransport(trans)
@@ -141,4 +145,5 @@ if (action == 1):
 elif (action == 2):
 	print("Time to create() %d times: %s" % (requests, create_test()))
 else:
-	print("Time to create() then get() %d times: %s" % (requests, get_create_test()))
+	print("Time to create() then get() %d times: %s" % 
+		 (requests, get_create_test()))

@@ -1,5 +1,5 @@
 import sys
-sys.path.append("gen-py")
+sys.path.append("gen-py") 
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
