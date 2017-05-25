@@ -1,23 +1,23 @@
 TARGET = server
 IDL = ../project.thrift
-SVRSRC = nb_server.cpp gen-cpp/TradeHistory.cpp gen-cpp/trade_report_types.cpp
+SRC = server.cpp gen-cpp/Projects.cpp gen-cpp/project_types.cpp
 
 CC = g++
-LIBS = -lthrift -lthriftnb -levent
+LIBS = -lthrift -lboost_program_options
 CFLAGS = -Wall -std=c++11
 THRIFT = thrift -gen cpp
 
-all: server 
+all: server
 
-gen-cpp/Reports.cpp: $(IDL)
+gen-cpp/Projects.cpp: $(IDL)
 	$(THRIFT) $(IDL)
 
-gen-cpp/reports.cpp: $(IDL)
+gen-cpp/project_types.cpp: $(IDL)
 	$(THRIFT) $(IDL)
 
-server: $(SVRSRC)
-	$(CC) -o $@ $(SVRSRC) $(CFLAGS) $(LIBS)
-
+server: $(SRC)
+	$(CC) -o $@ $(SRC) $(CFLAGS) $(LIBS)
+	
 clean:
 	$(RM) -r gen-cpp
 	$(RM) $(TARGET)
