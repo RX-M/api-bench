@@ -1,11 +1,11 @@
 version: '3.1'
 
 services:
-  pyapp:
-    image: randyabernethy/tgocli
+  api-bench:
+    image: "${ABIMAGE}"
     deploy:
       replicas: 4
       restart_policy:
         condition: never
     network_mode: "host"
-    #command: ["-a", "1"]
+    command: ["--action", "${ABACTION}"]
