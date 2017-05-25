@@ -5,7 +5,7 @@ import argparse
 import httplib
 
 # Change number of requests here
-REQUESTS = 100
+REQUESTS = 1000000
 JSON = '{"name":"Thrift", "host":"AFS", "day":"1", "month":"10","year":"2007"}'
 HEADERS = {"Content-Type": "application/json", "Accept":"json"}
 
