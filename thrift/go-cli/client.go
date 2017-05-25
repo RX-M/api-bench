@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"flag"
-	"time"
-	"strconv"
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"OpenSourceProjects"
+	"flag"
+	"fmt"
+	"git.apache.org/thrift.git/lib/go/thrift"
+	"strconv"
+	"time"
 )
 
 func main() {
@@ -26,7 +26,7 @@ func main() {
 	trans := transFac.GetTransport(transEP)
 	protoFac := thrift.NewTCompactProtocolFactory()
 	cli := OpenSourceProjects.NewProjectsClientFactory(trans, protoFac)
-        fmt.Printf("[Client] Host %s, Port %d, Action %d\n", *hostPtr, *portPtr, *actionPtr)
+	fmt.Printf("[Client] Host %s, Port %d, Action %d\n", *hostPtr, *portPtr, *actionPtr)
 	//Connect to the server
 	if err := trans.Open(); err != nil {
 		fmt.Println("Error opening socket:", err)
@@ -34,26 +34,26 @@ func main() {
 	}
 	defer trans.Close()
 	//Setup a mock project
-	d := OpenSourceProjects.Date{2007,1,10}
+	d := OpenSourceProjects.Date{2007, 1, 10}
 	p := OpenSourceProjects.Project{"Thrift", "ASF", &d}
 	//Run the test
 	start := time.Now()
 	switch *actionPtr {
-		case 1:
-			for i := 0; i < 1000000; i++ {
-				_, _ = cli.Get("Thrift")
-			}
-		case 2:
-			for i := 0; i < 1000000; i++ {
-				_, _ = cli.Create(&p)
-			}
-		case 3:
-			for i := 0; i < 1000000; i++ {
-				_, _ = cli.Create(&p)
-				_, _ = cli.Get("Thrift")
-			}
-		default:
-			fmt.Println("Invalid action, must be 1-3")
+	case 1:
+		for i := 0; i < 1000000; i++ {
+			_, _ = cli.Get("Thrift")
+		}
+	case 2:
+		for i := 0; i < 1000000; i++ {
+			_, _ = cli.Create(&p)
+		}
+	case 3:
+		for i := 0; i < 1000000; i++ {
+			_, _ = cli.Create(&p)
+			_, _ = cli.Get("Thrift")
+		}
+	default:
+		fmt.Println("Invalid action, must be 1-3")
 	}
 	elap := time.Since(start)
 	fmt.Printf("Time to get() 1000000 times: %v\n", elap)
