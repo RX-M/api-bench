@@ -1,0 +1,8 @@
+FROM ubuntu:16.04
+LABEL APP OSSAPITEST
+LABEL LANG Go
+LABEL SIDE Cli
+COPY server ./
+COPY lib* /usr/local/lib/
+RUN ldconfig
+ENTRYPOINT ["/server"]

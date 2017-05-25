@@ -3,7 +3,7 @@ IDL = ../project.thrift
 CLISRC = client.cpp gen-cpp/Projects.cpp gen-cpp/project_types.cpp
 
 CC = g++
-LIBS = -lthrift -lthriftnb -levent -lboost_program_options
+LIBS = -lthrift -lboost_program_options
 CFLAGS = -Wall -std=c++11
 THRIFT = thrift -gen cpp
 
