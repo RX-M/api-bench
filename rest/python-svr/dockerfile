@@ -1,0 +1,4 @@
+FROM python:2.7.13-alpine
+RUN pip install Flask
+COPY rpysvr.py /
+ENTRYPOINT ["usr/local/bin/python", "/rpysvr.py"]
