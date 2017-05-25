@@ -17,10 +17,23 @@ def version():
 
 PROJECTS = {}
 
-@APP.route('/projects', methods=['GET', 'POST'])
-def projects():
-    """ /projects collection allows POST of new projects and GET of all projects """
-    if request.method == 'POST':
+@APP.route('/projects/<string:project_name>', methods=['GET'])
+def project(project_name):
+    """ project name project be used as a /projects path param to GET a single project """
+    if project_name not in PROJECTS:
+        return jsonify(error="project not found"), 404
+    if request.method == 'GET':
+        proj = {
+            name:"Thrift",
+            host:"ASF",
+            inception: {
+                day:"10",
+                month:"1",
+                year:"2007"
+            }
+        }
+        return jsonify(proj)
+    if request.method == 'PUT':
         proj = request.get_json()
         result = validate_project(proj)
         if result:
@@ -32,20 +45,8 @@ def projects():
         response.headers['Location'] = "projects/" + str(proj["name"])
         response.autocorrect_name_header = False
         return response
-    elif request.method == 'GET':
-        return jsonify(list(proj.values()))
     else:
-        return jsonify(error="bad HTTP verb, PUT supported"), 400
-
-@APP.route('/projects/<string:project_name>', methods=['GET'])
-def project(project_name):
-    """ project name project be used as a /projects path param to GET a single project """
-    if project_name not in PROJECTS:
-        return jsonify(error="project not found"), 404
-    if request.method == 'GET':
-        return jsonify(PROJECTS[project_name])
-    else:
-        return jsonify(error="bad HTTP verb, only GET supported"), 400
+        return jsonify(error="bad HTTP verb, only GET and PUT supported"), 400
 
 def validate_project(proj):
     """ DbC checks for required project fields and settings

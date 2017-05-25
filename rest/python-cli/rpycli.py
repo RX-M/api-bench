@@ -5,14 +5,14 @@ import argparse
 import httplib
 
 # Change number of requests here
-REQUESTS = 1000000
+REQUESTS = 100
 JSON = '{"name":"Thrift", "host":"AFS", "day":"1", "month":"10","year":"2007"}'
 HEADERS = {"Content-Type": "application/json", "Accept":"json"}
 
 # ----------------------------1 million get()----------------------------#
 def get_test(client):
     """Calls get() 1 million times"""
-    client.request("POST", "/projects", JSON, HEADERS)
+    client.request("PUT", "/projects/Thrift", JSON, HEADERS)
     client.getresponse()
     start = time.time()
     for _ in range(REQUESTS):
@@ -27,7 +27,7 @@ def create_test(client):
     """Calls create() 1 million times"""
     start = time.time()
     for _ in range(REQUESTS):
-        client.request("POST", "/projects", JSON, HEADERS)
+        client.request("PUT", "/projects/Thrift", JSON, HEADERS)
         resp = client.getresponse()
         resp.read()
     end = time.time()
@@ -38,7 +38,7 @@ def get_create_test(client):
     """Calls create(), then get() 1 million times"""
     start = time.time()
     for _ in range(REQUESTS):
-        client.request("POST", "/projects", JSON, HEADERS)
+        client.request("PUT", "/projects/Thrift", JSON, HEADERS)
         resp = client.getresponse()
         resp.read()
         client.request("GET", "/projects/Thrift")
@@ -47,7 +47,7 @@ def get_create_test(client):
     end = time.time()
     return end - start
 
-#---------------Call the appropriate test based on user inPOST------------#
+#---------------Call the appropriate test based on user inPUT------------#
 if __name__ == "__main__":
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument('-H', '--host', default='localhost')
