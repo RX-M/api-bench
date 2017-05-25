@@ -17,7 +17,8 @@ func (ph ProjectsHandler) Get(name string) (r *OpenSourceProjects.Project, err e
 }
 
 func (ph ProjectsHandler) Create(p *OpenSourceProjects.Project) (r *OpenSourceProjects.CreateResult_, err error) {
-	return
+	cr := OpenSourceProjects.CreateResult_{200, "ok"}
+	return &cr, nil
 }
 
 func main() {

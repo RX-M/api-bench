@@ -1,0 +1,10 @@
+FROM golang:1.8.3-alpine
+LABEL APP OSSAPITEST
+LABEL LANG Go
+LABEL SIDE Svr
+RUN apk update && apk add git
+WORKDIR /go/src/app
+COPY gen-go/OpenSourceProjects /go/src/OpenSourceProjects
+COPY server.go ./
+RUN go get git.apache.org/thrift.git/lib/go/thrift
+ENTRYPOINT ["go", "run", "server.go"]

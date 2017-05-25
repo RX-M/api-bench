@@ -2,10 +2,10 @@ version: '3.1'
 
 services:
   pyapp:
-    image: randyabernethy/somerepo
+    image: emilyporat/python-cli
     deploy:
-      replicas: 10
+      replicas: 4
       restart_policy:
         condition: never
     network_mode: "host"
-    command: [localhost, 9090]
+    command: ["-a", "1"]

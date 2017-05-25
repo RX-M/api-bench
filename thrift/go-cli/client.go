@@ -2,34 +2,40 @@ package main
 
 import (
 	"fmt"
+	"flag"
+	"time"
+	"strconv"
 	"git.apache.org/thrift.git/lib/go/thrift"
 	"OpenSourceProjects"
 )
 
 func main() {
-	addr := "localhost:9090"
-	transport, err := thrift.NewTSocket(addr)
+	hostPtr := flag.String("host", "localhost", "hostname to connect to")
+	portPtr := flag.Int("port", 9090, "port to connect to")
+	actionPtr := flag.Int("action", 1, "tests to run")
+	flag.Parse()
+	addr := *hostPtr + ":" + strconv.Itoa(*portPtr)
+	transEP, err := thrift.NewTSocket(addr)
 	if err != nil {
 		fmt.Println("Error creating socket:", err)
 		return
 	}
-	transportFactory := thrift.NewTBufferedTransportFactory(8192)
-	transport = transportFactory.GetTransport(transport)
-	defer transport.Close()
-	if err := transport.Open(); err != nil {
+	transFac := thrift.NewTBufferedTransportFactory(8192)
+	trans := transFac.GetTransport(transEP)
+	protoFac := thrift.NewTCompactProtocolFactory()
+	cli := OpenSourceProjects.NewProjectsClientFactory(trans, protoFac)
+        fmt.Printf("[Client] Host %s, Port %d, Action %d\n", *hostPtr, *portPtr, *actionPtr)
+
+	if err := trans.Open(); err != nil {
 		fmt.Println("Error opening socket:", err)
 		return
 	}
-	protocolFactory := thrift.NewTCompactProtocolFactory()
-	client := OpenSourceProjects.NewProjectsClientFactory(transport, protocolFactory)
+	defer trans.Close()
 
-        transport, err := thrift.NewTServerSocket(addr)
-        if err != nil {
-		fmt.Println(err)
-                return
-        }
-        fmt.Printf("%T\n", transport)
-        server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
-        fmt.Println("Starting the server... on ", addr)
-        server.Serve()
+	start := time.Now()
+	for i := 0; i < 1000000; i++ {
+		_, _ = cli.Get("Thrift")
+	}
+	elap := time.Since(start)
+	fmt.Printf("Time to get() 1000000 times: %v\n", elap)
 }
