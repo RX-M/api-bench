@@ -9,7 +9,7 @@ app.disable('etag');
 
 //Parse command line args
 program
-  .option('-p, --port <n>', 'Port', 9090);
+  .option('-p, --port <n>', 'Port', 9090)
   .parse(process.argv);
 
 //Create routes
