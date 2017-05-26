@@ -1,5 +1,6 @@
 FROM python:2.7.13-alpine
 RUN pip install Flask
 COPY rpysvr.py /
-ENV FLASK_APP="rpysvr.py"
-RUN ["usr/local/bin/python", "-m", "flask", "run", "-p", "9090"]
+ENV FLASK_APP="/rpysvr.py"
+ENTRYPOINT ["/usr/local/bin/python", "-m", "flask", "run", "-p"]
+CMD ["9090"]
