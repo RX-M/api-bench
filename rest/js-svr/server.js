@@ -3,6 +3,7 @@ var http = require('http');
 var program = require('commander');
 
 var app = express();
+app.disable('etag');
 
 //Parse command line args
 program
