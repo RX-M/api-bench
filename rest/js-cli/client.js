@@ -4,11 +4,11 @@ var program = require('commander');
 //Parse command line args
 program
   .option('-H, --host [value]', 'Host', 'localhost')
-  .option('-p, --port <n>', 'Port', parseInt, 9090)
-  .option('-a, --action <n>', 'Action (must be 1-3)', parseInt, 1)
+  .option('-p, --port <n>', 'Port', 9090)
+  .option('-a, --action <n>', 'Action (must be 1-3)', "1")
   .parse(process.argv);
 
-var requests = 5;
+var requests = 100;
 
 function test(options){
 	for (i = 0; i < requests; i ++){
@@ -64,13 +64,13 @@ console.log("[Client] Host " + program.host + ", Port " + program.port + ", Acti
 
 switch (program.action) {
 
-	case 1 :
+	case "1" :
 		test(get_options);
 		break;
-	case 2: 
+	case "2": 
 		test(put_options);	
 		break;
-	case 3:
+	case "3":
 		get_create_test(get_options, put_options);
 		break;
 }
