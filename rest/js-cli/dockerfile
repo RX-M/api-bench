@@ -1,0 +1,5 @@
+FROM node:7.10.0-alpine
+RUN npm install express
+RUN npm install commander
+COPY client.js /
+ENTRYPOINT ["node", "/client.js"]

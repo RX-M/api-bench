@@ -8,7 +8,7 @@ program
   .option('-a, --action <n>', 'Action (must be 1-3)', "1")
   .parse(process.argv);
 
-var requests = 100;
+var requests = 100000;
 
 function test(options){
 	for (i = 0; i < requests; i ++){
