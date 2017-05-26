@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var express = require('express');
 var http = require('http');
 var program = require('commander');
@@ -7,8 +9,11 @@ app.disable('etag');
 
 //Parse command line args
 program
-  .option('-p, --port <n>', 'Port', parseInt, 9090)
+  .option('-p, --port <n>', 'Port', 9090)
   .parse(process.argv);
+
+console.log("Port ")
+console.log(program)
 
 //Create routes
 app.get('/projects/:name', function(req, res) {
