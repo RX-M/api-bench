@@ -71,4 +71,3 @@ def validate_project(proj):
     except ValueError as ex:
         return str(ex)
     return False #no errors
-
