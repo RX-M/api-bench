@@ -11,6 +11,11 @@ spec:
         app: node-exporter
     spec:
       hostNetwork: true
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Equal"
+        value: ""
+        effect: "NoSchedule"
       containers:
       - name: node-exporter
         image: prom/node-exporter

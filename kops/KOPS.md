@@ -102,8 +102,7 @@ kops create cluster \
     --node-count=2 \
     --zones=us-west-1c \
     --node-size=t2.xlarge \
-    --associate-public-ip=false \
-    --api-loadbalancer-type=public \
+    --associate-public-ip=true \
     --dns-zone=Z1PKS0TBPA1WSF \
     --authorization=AlwaysAllow \
     --channel=stable \

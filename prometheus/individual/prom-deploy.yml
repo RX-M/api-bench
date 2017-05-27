@@ -11,8 +11,6 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: prometheus
-      automountServiceAccountToken: true
       nodeSelector:
         node-role.kubernetes.io/master:
       tolerations:

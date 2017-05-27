@@ -12,6 +12,11 @@ spec:
         app: node-exporter
     spec:
       hostNetwork: true
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Equal"
+        value: ""
+        effect: "NoSchedule"
       containers:
       - name: node-exporter
         image: prom/node-exporter
@@ -59,6 +64,11 @@ spec:
       hostPID: true
       hostIPC: true
       hostNetwork: true
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Equal"
+        value: ""
+        effect: "NoSchedule"
       containers:
       - name: cadvisor
         image: google/cadvisor
@@ -132,8 +142,6 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: prometheus
-      automountServiceAccountToken: true
       nodeSelector:
         node-role.kubernetes.io/master:
       tolerations:
