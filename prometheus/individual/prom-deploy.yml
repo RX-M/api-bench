@@ -1,0 +1,66 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: prom-dep
+  name: prom-dep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      automountServiceAccountToken: true
+      nodeSelector:
+        node-role.kubernetes.io/master:
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Equal"
+        value: ""
+        effect: "NoSchedule"
+      containers:
+      - image: quay.io/prometheus/prometheus:v1.6.2
+        name: prometheus
+        command:
+        - "/bin/prometheus"
+        args:
+        - "-config.file=/etc/prometheus/prometheus.yml"
+        - "-storage.local.path=/prometheus"
+        - "-storage.local.retention=12h"
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/prometheus"
+          name: data
+        - mountPath: "/etc/prometheus"
+          name: config-volume
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 2500Mi
+      - image: grafana/grafana
+        name: grafana
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "nevermind"
+        volumeMounts:
+        - mountPath: "/var/lib/grafana"
+          name: awsvol
+      volumes:
+      - emptyDir: {}
+        name: data
+      - configMap:
+          name: prom-config
+        name: config-volume
+      - name: awsvol
+        awsElasticBlockStore:
+          volumeID: vol-066c9034983ed7fdd
+          fsType: ext4
