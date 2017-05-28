@@ -23,6 +23,6 @@ message GetArg {
 }
 
 service Projects {
-    rpc get(GetArg) returns (Project);
-    rpc create(Project) returns (CreateResult);
+    rpc Get(GetArg) returns (Project);
+    rpc Create(Project) returns (CreateResult);
 }
