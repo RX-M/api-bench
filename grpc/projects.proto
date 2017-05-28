@@ -3,22 +3,26 @@ package OpenSourceProjects;
 
 message Project {
     message Date {
-        int16 year = 1
-        int16 month = 2
-        int16 day = 3
+        int32 year = 1;
+        int32 month = 2;
+        int32 day = 3;
     }
 
-    string name = 1      //Proper project name
-    string host = 2      //Hosting/control foundation or company
-    Date inception =3    //Date project was open sourced
+    string name = 1;     //Proper project name
+    string host = 2;     //Hosting/control foundation or company
+    Date inception = 3;   //Date project was open sourced
 }
 
 message CreateResult {
-    int16 code = 1
-    string message = 2
+    int32 code = 1;
+    string message = 2;
+}
+
+message GetArg {
+  string name = 1;
 }
 
 service Projects {
-    rpc get(string) returns Project
-    rpc create(Project) returns CreateResult
+    rpc get(GetArg) returns (Project);
+    rpc create(Project) returns (CreateResult);
 }
