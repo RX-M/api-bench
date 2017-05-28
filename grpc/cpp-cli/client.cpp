@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
     po::notify(vm);
 
     auto channel = grpc::CreateChannel(host + ":" + std::to_string(port), grpc::InsecureChannelCredentials());
-    grpc::ClientContext context;
     auto stub = OpenSourceProjects::Projects::NewStub(channel);
 
     OpenSourceProjects::Project p;
@@ -39,32 +38,36 @@ int main(int argc, char* argv[]) {
     switch (action) {
     case 1:
       for (int i = 0; i < 1000000; i++) {
+        grpc::ClientContext context;
         auto status = stub->Get(&context, name, &p);
         if (!status.ok()) {
-          std::cout << std::endl;
+          std::cout << "Get failed: " << status.error_message() << std::endl;
           return 1;
         }
       }
       break;
     case 2:
       for (int i = 0; i < 1000000; i++) {
+        grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
         if (!status.ok()) {
-          std::cout << std::endl;
+          std::cout << "Create failed: " << status.error_message() << std::endl;
           return 1;
         }
       }
       break;
     case 3:
       for (int i = 0; i < 1000000; i++) {
+        grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
         if (!status.ok()) {
-          std::cout << std::endl;
+          std::cout << "Create failed: " << status.error_message() << std::endl;
           return 1;
         }
-        status = stub->Get(&context, name, &p);
+        grpc::ClientContext context2;
+        status = stub->Get(&context2, name, &p);
         if (!status.ok()) {
-          std::cout << status.error_message() << std::endl;
+          std::cout << "Get failed: " << status.error_message() << std::endl;
           return 1;
         }
       }
