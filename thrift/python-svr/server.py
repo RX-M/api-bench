@@ -47,7 +47,7 @@ HANDLER = ProjectHandler()
 PROC = Projects.Processor(HANDLER)
 TRANS_SVR = TSocket.TServerSocket(port=ARGS['port'])
 TRANS_FAC = TTransport.TBufferedTransportFactory()
-PROTO_FAC = TCompactProtocol.TCompactProtocolFactory()
+PROTO_FAC = TCompactProtocol.TCompactProtocolAcceleratedFactory(fallback=False)
 SERVER = TServer.TThreadedServer(PROC, TRANS_SVR, TRANS_FAC, PROTO_FAC)
 
 print("[Server] Listening on port " + ARGS['port'])

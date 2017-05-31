@@ -23,7 +23,7 @@ def make_project(name, host, day, month, year):
     return project
 
 # Change number of requests here
-REQUESTS = 1000000
+REQUESTS = 10000
 
 # ----------------------------1 million get()----------------------------#
 def get_test(client):
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     ARGS = vars(PARSER.parse_args())
     print("[Client] Host %s, Port %s, Action %s" %(ARGS['host'], ARGS['port'], ARGS['action']))
     TRANS = TTransport.TBufferedTransport(TSocket.TSocket(ARGS['host'], ARGS['port']))
-    PROTO = TCompactProtocol.TCompactProtocol(TRANS)
+    PROTO = TCompactProtocol.TCompactProtocolAccelerated(TRANS, fallback=False)
     CLIENT = Projects.Client(PROTO)
     TRANS.open()
     if ARGS['action'] == '1':

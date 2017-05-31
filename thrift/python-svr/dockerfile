@@ -1,5 +1,6 @@
-FROM python:2.7.13-alpine
-RUN pip install thrift
+FROM buildpack-deps:xenial
+RUN apt-get update && apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools python3-wheel
+RUN pip3 install thrift
 COPY ./gen-py /gen-py
 COPY server.py /
-ENTRYPOINT ["/usr/local/bin/python", "/server.py"]
+ENTRYPOINT ["/usr/bin/python3", "/server.py"]
