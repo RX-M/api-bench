@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "flag"
+  "log"
 	"strconv"
   "time"
 
@@ -19,9 +20,9 @@ func main() {
 	flag.Parse()
 	addr := *hostPtr + ":" + strconv.Itoa(*portPtr)
 
-  conn, err := grpc.Dial(addr)
+  conn, err := grpc.Dial(addr, grpc.WithInsecure())
   if err != nil {
-    fmt.Println("Failed to connect " + addr)
+    log.Fatal(err)
     return
   }
   defer conn.Close()
