@@ -1,15 +1,15 @@
 package main
 
 import (
-  "fmt"
-  "flag"
-  "log"
+	"flag"
+	"fmt"
+	"log"
 	"strconv"
-  "time"
+	"time"
 
 	"OpenSourceProjects"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-  "golang.org/x/net/context"
 )
 
 func main() {
@@ -20,40 +20,40 @@ func main() {
 	flag.Parse()
 	addr := *hostPtr + ":" + strconv.Itoa(*portPtr)
 
-  conn, err := grpc.Dial(addr, grpc.WithInsecure())
-  if err != nil {
-    log.Fatal(err)
-    return
-  }
-  defer conn.Close()
-  cli := OpenSourceProjects.NewProjectsClient(conn)
-  p := &OpenSourceProjects.Project {
-    Name: "",
-    Host: "",
-    Inception: &OpenSourceProjects.Project_Date {
-      Year: 2007,
-      Month: 1,
-      Day: 10,
-    },
-  }
+	conn, err := grpc.Dial(addr, grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	defer conn.Close()
+	cli := OpenSourceProjects.NewProjectsClient(conn)
+	p := &OpenSourceProjects.Project{
+		Name: "",
+		Host: "",
+		Inception: &OpenSourceProjects.Project_Date{
+			Year:  2007,
+			Month: 1,
+			Day:   10,
+		},
+	}
 	start := time.Now()
-  switch *actionPtr {
-  case 1:
+	switch *actionPtr {
+	case 1:
 		for i := 0; i < 1000000; i++ {
-      cli.Get(context.Background(), &OpenSourceProjects.GetArg{Name: "Thrift"})
+			cli.Get(context.Background(), &OpenSourceProjects.GetArg{Name: "Thrift"})
 		}
-  case 2:
+	case 2:
 		for i := 0; i < 1000000; i++ {
-      cli.Create(context.Background(), p)
+			cli.Create(context.Background(), p)
 		}
-  case 3:
+	case 3:
 		for i := 0; i < 1000000; i++ {
-      cli.Create(context.Background(), p)
-      cli.Get(context.Background(), &OpenSourceProjects.GetArg{Name: "Thrift"})
+			cli.Create(context.Background(), p)
+			cli.Get(context.Background(), &OpenSourceProjects.GetArg{Name: "Thrift"})
 		}
-  default:
+	default:
 		fmt.Println("Invalid action, must be 1-3")
-  }
+	}
 	elap := time.Since(start)
 	fmt.Printf("Time to get() 1000000 times: %v\n", elap)
 }
