@@ -55,5 +55,5 @@ func main() {
 		fmt.Println("Invalid action, must be 1-3")
 	}
 	elap := time.Since(start)
-	fmt.Printf("Time to get() 1000000 times: %v\n", elap)
+	fmt.Printf("Time for 1000000 times: %v\n", elap)
 }

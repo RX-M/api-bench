@@ -4,5 +4,4 @@ RUN mkdir cpp-cli
 COPY projects.proto ./
 COPY cpp-cli/Makefile.docker cpp-cli/client.cpp cpp-cli/
 RUN make -C cpp-cli -f Makefile.docker
-CMD cpp-cli/client
-
+ENTRYPOINT cpp-cli/client
