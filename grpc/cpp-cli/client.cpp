@@ -3,6 +3,7 @@
 #include <grpc++/create_channel.h>
 #include <grpc++/security/credentials.h>
 #include <boost/program_options.hpp>
+#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -37,8 +38,11 @@ int main(int argc, char* argv[]) {
     name.set_name("Thrift");
     OpenSourceProjects::CreateResult cr;
 
+    auto begin = std::chrono::high_resolution_clock::now();
+    std::cout << "Time to ";
     switch (action) {
     case 1:
+      std::cout << "Get() ";
       for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Get(&context, name, &p);
@@ -49,6 +53,7 @@ int main(int argc, char* argv[]) {
       }
       break;
     case 2:
+      std::cout << "Create() ";
       for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
@@ -59,6 +64,7 @@ int main(int argc, char* argv[]) {
       }
       break;
     case 3:
+      std::cout << "Create() then Get() ";
       for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
@@ -75,4 +81,7 @@ int main(int argc, char* argv[]) {
       }
       break;
     }
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::high_resolution_clock::now() - begin);
+    std::cout << repeat << " times: " << elapsed.count() << " ms " << std::endl;
 }
