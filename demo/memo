@@ -1,0 +1,1 @@
+docker run --rm  -v $(pwd):/tmp/ thrift/thrift-compiler --gen py --out /tmp  /tmp/project.thrift 
