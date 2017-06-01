@@ -23,7 +23,7 @@ def make_project(name, host, day, month, year):
     return project
 
 # Change number of requests here
-REQUESTS = 10000
+REQUESTS = 1000000
 
 # ----------------------------1 million get()----------------------------#
 def get_test(client):
