@@ -4,4 +4,4 @@ RUN mkdir cpp-svr
 COPY projects.proto ./
 COPY cpp-svr/Makefile.docker cpp-svr/server.cpp cpp-svr/
 RUN make -C cpp-svr -f Makefile.docker
-CMD cpp-svr/server
+ENTRYPOINT ["cpp-svr/server"]
