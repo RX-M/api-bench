@@ -37,7 +37,7 @@ def get_test(client):
 # --------------------------1 million create()---------------------------#
 def create_test(client):
     """Calls create() 1 million times"""
-    project = make_project("Thrift", "AFS", 10, 1, 2007)
+    project = make_project("Thrift", "ASF", 10, 1, 2007)
     start = time.time()
     for _ in range(REQUESTS):
         client.create(project)
@@ -49,7 +49,7 @@ def get_create_test(client):
     """Calls create(), then get() 1 million times"""
     start = time.time()
     for _ in range(REQUESTS):
-        project = make_project("Thrift", "AFS", 10, 1, 2007)
+        project = make_project("Thrift", "ASF", 10, 1, 2007)
         client.create(project)
         client.get("Thrift")
     end = time.time()
