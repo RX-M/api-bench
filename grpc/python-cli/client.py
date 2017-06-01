@@ -6,14 +6,13 @@ import grpc
 import projects_pb2
 import projects_pb2_grpc
 
-REQUESTS = 1000000
-
 
 def main(argv):
     p = argparse.ArgumentParser()
     p.add_argument('-H', '--host', default='localhost')
     p.add_argument('-p', '--port', type=int, default='9090')
     p.add_argument('-a', '--action', type=int, choices=[1, 2, 3], default=1)
+    p.add_argument('-n', '--repeat', type=int, default=1000000)
     args = p.parse_args(argv)
     print("[Client] Host %s, Port %s, Action %s" % (args.host, args.port, args.action))
 
@@ -22,12 +21,12 @@ def main(argv):
 
     start = time.time()
     if args.action == 1:
-        print("Time to get() %d times: " % REQUESTS, end='')
-        for _ in range(REQUESTS):
+        print("Time to get() %d times: " % args.repeat, end='')
+        for _ in range(args.repeat):
             stub.Get(projects_pb2.GetArg(name='Thrift'))
     elif args.action == 2:
-        print("Time to create() %d times: " % REQUESTS, end='')
-        for _ in range(REQUESTS):
+        print("Time to create() %d times: " % args.repeat, end='')
+        for _ in range(args.repeat):
             stub.Create(projects_pb2.Project(
                 name='Thrift',
                 host='ASF',
@@ -38,8 +37,8 @@ def main(argv):
                 ),
             ))
     else:
-        print("Time to create() then get() %d times: " % REQUESTS, end='')
-        for _ in range(REQUESTS):
+        print("Time to create() then get() %d times: " % args.repeat, end='')
+        for _ in range(args.repeat):
             stub.Get(projects_pb2.GetArg(name='Thrift'))
             stub.Create(projects_pb2.Project(
                 name='Thrift',

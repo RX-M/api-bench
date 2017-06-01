@@ -12,12 +12,14 @@ int main(int argc, char* argv[]) {
     //Parse the command line
     int port = 9090;
     int action = 1;
+    int repeat = 1000000;
     std::string host = "localhost";
     po::options_description desc("Allowed options");
     desc.add_options()
         ("host", po::value<std::string>(&host)->default_value("localhost"), "Host")
         ("port", po::value<int>(&port)->default_value(9090), "Port")
         ("action", po::value<int>(&action)->default_value(1), "Test Action (must be 1, 2 or 3)")
+        ("repeat", po::value<int>(&repeat)->default_value(1000000), "Number of requests")
     ;
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -37,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     switch (action) {
     case 1:
-      for (int i = 0; i < 1000000; i++) {
+      for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Get(&context, name, &p);
         if (!status.ok()) {
@@ -47,7 +49,7 @@ int main(int argc, char* argv[]) {
       }
       break;
     case 2:
-      for (int i = 0; i < 1000000; i++) {
+      for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
         if (!status.ok()) {
@@ -57,7 +59,7 @@ int main(int argc, char* argv[]) {
       }
       break;
     case 3:
-      for (int i = 0; i < 1000000; i++) {
+      for (int i = 0; i < repeat; i++) {
         grpc::ClientContext context;
         auto status = stub->Create(&context, p, &cr);
         if (!status.ok()) {
