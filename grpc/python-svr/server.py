@@ -21,7 +21,10 @@ class ProjectsServicer(projects_pb2_grpc.ProjectsServicer):
         )
 
     def Create(self, request, context):
-        return projects_pb2.CreateResult(200, 'success')
+        return projects_pb2.CreateResult(
+            code=200,
+            message='success',
+        )
 
 
 def main(argv):
