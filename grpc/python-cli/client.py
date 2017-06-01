@@ -39,6 +39,17 @@ def main(argv):
             ))
     else:
         print("Time to create() then get() %d times: " % REQUESTS, end='')
+        for _ in range(REQUESTS):
+            stub.Get(projects_pb2.GetArg(name='Thrift'))
+            stub.Create(projects_pb2.Project(
+                name='Thrift',
+                host='ASF',
+                inception=projects_pb2.Project.Date(
+                    year=2007,
+                    month=10,
+                    day=1,
+                ),
+            ))
     elapsed = time.time() - start
     print(elapsed)
 
