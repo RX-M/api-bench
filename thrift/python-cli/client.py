@@ -61,10 +61,14 @@ if __name__ == "__main__":
     PARSER.add_argument('-H', '--host', default='localhost')
     PARSER.add_argument('-p', '--port', default='9090')
     PARSER.add_argument('-a', '--action', default='1')
+    PARSER.add_argument('-N', '--no-accel', action='store_true')
     ARGS = vars(PARSER.parse_args())
     print("[Client] Host %s, Port %s, Action %s" %(ARGS['host'], ARGS['port'], ARGS['action']))
     TRANS = TTransport.TBufferedTransport(TSocket.TSocket(ARGS['host'], ARGS['port']))
-    PROTO = TCompactProtocol.TCompactProtocolAccelerated(TRANS, fallback=False)
+    if ARGS['no_accel']:
+        PROTO = TCompactProtocol.TCompactProtocol(TRANS)
+    else:
+        PROTO = TCompactProtocol.TCompactProtocolAccelerated(TRANS, fallback=False)
     CLIENT = Projects.Client(PROTO)
     TRANS.open()
     if ARGS['action'] == '1':

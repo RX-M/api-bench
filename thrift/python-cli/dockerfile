@@ -1,6 +1,9 @@
 FROM buildpack-deps:xenial
-RUN apt-get update && apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools python3-wheel
-RUN pip3 install thrift
+# Either "3" or empty
+ARG PYTHON_VERSION=3
+RUN apt-get update && apt-get install -y --no-install-recommends python${PYTHON_VERSION}-dev python${PYTHON_VERSION}-pip python${PYTHON_VERSION}-setuptools python${PYTHON_VERSION}-wheel
+RUN pip${PYTHON_VERSION} install -U thrift
 COPY ./gen-py /gen-py
 COPY client.py /
-ENTRYPOINT ["/usr/bin/python3", "/client.py"]
+ENV PYTHON python${PYTHON_VERSION}
+ENTRYPOINT ${PYTHON} /client.py
