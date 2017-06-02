@@ -1,0 +1,34 @@
+Demo Prep
+
+PART I - Create a microservice, 
+package it, and deploy it with 
+orchestration
+============================
+- SHOW Thrift IDL #1
+- ACTION compile the IDL
+- SHOW Server 
+- SHOW Client
+- SHOW dockerfile
+- ACTION docker build
+- ACTION docker push
+- SHOW service.yaml
+- ACTION kubectl create -f proj-svc.yaml
+- SHOW deploy.yaml
+- ACTION kubectl create -f proj-dep.yaml
+- ACTION kubectl get/describe [also Prometheus]
+- ACTION :
+   $ kubectl run pycli2 --image nsuke/tpydemocli:v1 --command -- tail -f /dev/null
+   $ kubectl exec -it pycli2-2086532175-k7jxh --  /bin/sh
+   $ python client.py --host ossproj.default.svc.cluster.local
+
+
+PART II - Evolve the service
+============================
+- SHOW new IDL
+- ACTION build new IDL
+- SHOW new server
+- ACTION docker build and push
+- SHOW new deployment
+- ACTION rolling upgrade to new deployment, 1 container per 10 seconds
+- ACTION show old client still working no matter which server it hits
+- [OPTIONAL] ACTION show new client working also
