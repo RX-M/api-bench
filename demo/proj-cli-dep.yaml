@@ -5,7 +5,7 @@ metadata:
   labels:
     bu: eng
 spec:
-  replicas: 100
+  replicas: 40
   template:
     metadata:
       labels:
