@@ -1,8 +1,9 @@
+IDL_DIR = ../idl
 IDL = project.thrift
 IMAGE = tpydemosvr:loop
 
-gen-py: ../$(IDL)
-	cp ../$(IDL) ./
+gen-py: $(IDL_DIR)/$(IDL)
+	cp $(IDL_DIR)/$(IDL) ./
 	docker run --rm  -v ${CURDIR}:/tmp/ thrift/thrift-compiler --gen py --o /tmp /tmp/$(IDL) 
 
 build: gen-py
