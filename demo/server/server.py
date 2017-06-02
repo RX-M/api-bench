@@ -3,28 +3,29 @@ import sys
 from thrift.server.TServer import TThreadedServer
 from thrift.transport.TSocket import TServerSocket
 from thrift.protocol.TCompactProtocol import TCompactProtocolFactory
-from thrift.transport.TThreadedServer import TBufferedTransportFactory
+from thrift.transport.TTransport import TBufferedTransportFactory
 
-import OpenSourceProjects as gen
+import OpenSourceProjects.Projects as Projects
+import OpenSourceProjects.ttypes as ttypes
 
 
-class ProjectHandler(gen.Projects.Iface):
+class ProjectHandler(Projects.Iface):
     def get(self, name):
-        project = gen.ttypes.Project()
+        project = ttypes.Project()
         project.name = name
         project.host = "ASF"
-        project.inception = gen.ttypes.Date()
+        project.inception = ttypes.Date()
         project.inception.year = 2007
         project.inception.month = 1
         project.inception.day = 10
         return project
 
     def create(self, project):
-        return gen.ttypes.CreateResult(200, "sucess")
+        return ttypes.CreateResult(200, "sucess")
 
 if __name__ == '__main__':
-    server = TServer.TThreadedServer(
-        gen.Projects.Processor(ProjectHandler()),
+    server = TThreadedServer(
+        Projects.Processor(ProjectHandler()),
         TServerSocket(),
         TBufferedTransportFactory(),
         TCompactProtocolFactory(),
