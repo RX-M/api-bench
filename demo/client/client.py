@@ -11,6 +11,7 @@ if __name__ == '__main__':
     p.add_argument('--host', '-H', default='localhost')
     p.add_argument('--port', '-p', type=int, default=9090)
     args = p.parse_args()
+
     sock = TSocket(args.host, args.port)
     trans = TBufferedTransport(sock)
     proto = TCompactProtocol(trans)
