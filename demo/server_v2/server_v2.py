@@ -11,7 +11,7 @@ class ProjectHandler(Projects.Iface):
     def get(self, name):
         return ttypes.Project(
             name,
-            host,
+            'ASF',
             ttypes.Date(2007, 1, 10),
             commits=5012
         )

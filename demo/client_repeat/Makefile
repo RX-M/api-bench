@@ -1,6 +1,6 @@
 IDL_DIR = ../idl
 IDL = project.thrift
-IMAGE = tpydemosvr:loop
+IMAGE = tpydemocli:loop
 
 gen-py: $(IDL_DIR)/$(IDL)
 	cp $(IDL_DIR)/$(IDL) ./

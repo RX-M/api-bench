@@ -16,5 +16,4 @@ clean:
 	$(RM) -r gen-py
 	$(RM) $(IDL)
 
-
 all: build

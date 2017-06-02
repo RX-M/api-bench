@@ -6,7 +6,6 @@ struct Date {
     3: i16 day
 } 
 
-
 struct Project {
     1: string name       //Proper project name
     2: string host       //Hosting/control foundation or company
