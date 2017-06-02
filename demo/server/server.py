@@ -16,7 +16,7 @@ class ProjectHandler(Projects.Iface):
         )
 
     def create(self, project):
-        return ttypes.CreateResult(200, "sucess")
+        return ttypes.CreateResult(200, 'sucess')
 
 if __name__ == '__main__':
     server = TThreadedServer(
