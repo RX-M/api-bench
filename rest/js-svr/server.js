@@ -14,11 +14,11 @@ program
 
 //Create routes
 app.get('/projects/:name', function(req, res) {
-    res.send('{"name":"' + req.params.name + '","host":"ASF","inception":"{"year":"2007","month":"1","day":"10"}"}');
+    res.send(JSON.stringify({name: req.params.name, host:"ASF",inception: {year: 2007, month: 1, day: 10}}));
 });
 
 app.put('/projects/:name', function(req, res) {
-    res.send('{"code":"200","message":"ok"}');
+    res.send(JSON.stringify({code: 200, message: "ok"}));
 });
 
 //Run server

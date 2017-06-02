@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ossproj
+  labels:
+    bu: eng
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        appname: ossproj
+        targetenv: demo
+    spec:
+      containers:
+      - name: ossprojc
+        image: nsuke/tpydemosvr:v1
+        ports:
+        - containerPort: 9090

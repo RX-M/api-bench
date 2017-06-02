@@ -3,7 +3,7 @@ var program = require('commander');
 
 //Parse command line args
 program
-  .option('-H, --host [value]', 'Host', 'localhost')
+  .option('-H, --host [value]', 'Host', '127.0.0.1')
   .option('-p, --port <n>', 'Port', 9090)
   .option('-a, --action <n>', 'Action (must be 1-3)', "1")
   .parse(process.argv);
@@ -43,7 +43,7 @@ function get_create_test(option1, option2){
 const get_options = {
   hostname: program.host,
   port: program.port,
-  path: '/projects/Thrift',
+  path: '/projects/thrift',
   method: 'GET',
   headers: {
     'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ const get_options = {
 const put_options = {
   hostname: program.host,
   port: program.port,
-  path: '/projects/Thrift',
+  path: '/projects/thrift',
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'

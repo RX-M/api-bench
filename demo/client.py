@@ -13,6 +13,7 @@ if __name__ == '__main__':
     client = gen.Projects.Client(proto)
     trans.open()
     try:
-        client.get("Thrift")
+        proj = client.get("Thrift")
+        print(proj)
     finally:
         trans.close()

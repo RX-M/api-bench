@@ -1,4 +1,4 @@
-namespace py OpenSourceProjects
+namespace * OpenSourceProjects
 
 struct Date {
     1: i16 year
