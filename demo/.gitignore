@@ -1,0 +1,7 @@
+client/project.thrift
+client_repeat/project.thrift
+server/project.thrift
+client_v2/project_v2.thrift
+server_v2/project_v2.thrift
+gen-py
+OpenSourceProjects
