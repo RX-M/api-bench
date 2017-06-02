@@ -1,19 +1,20 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: ossprojsvr
+  name: ossprojddoscli
   labels:
     bu: eng
 spec:
-  replicas: 10
+  replicas: 100
   template:
     metadata:
       labels:
-        appname: ossproj
+        appname: ossprojddoscli
         targetenv: demo
     spec:
       containers:
-      - name: ossprojsvrc
-        image: nsuke/tpydemosvr:v1
+      - name: ossprojddosclic
+        imagePullPolicy: Always
+        image: nsuke/tpydemocli:loop
         ports:
         - containerPort: 9090
