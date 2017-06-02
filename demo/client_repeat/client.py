@@ -1,5 +1,5 @@
 import argparse
-# import time
+import time
 
 from thrift.transport.TSocket import TSocket
 from thrift.transport.TTransport import TBufferedTransport
@@ -12,18 +12,22 @@ if __name__ == '__main__':
     p.add_argument('--host', '-H', default='localhost')
     p.add_argument('--port', '-p', type=int, default=9090)
     args = p.parse_args()
-    sock = TSocket(args.host, args.port)
-    trans = TBufferedTransport(sock)
-    proto = TCompactProtocol(trans)
-    client = gen.Client(proto)
-    trans.open()
     cnt = 0
-    try:
-        while True:
-            proj = client.get("Thrift")
-            cnt += 1
-            if cnt == 10000:
-                cnt = 0
-                print(proj)
-    finally:
-        trans.close()
+    while True:
+        sock = TSocket(args.host, args.port)
+        trans = TBufferedTransport(sock)
+        proto = TCompactProtocol(trans)
+        client = gen.Client(proto)
+        trans.open()
+        try:
+            while True:
+                proj = client.get("Thrift")
+                cnt += 1
+                if cnt % 10000 == 0:
+                    print('Sent %d requests' % cnt)
+                    print(proj)
+        except Exception:
+            print('Disconnected, retrying...')
+            time.sleep(1)
+        finally:
+            trans.close()
