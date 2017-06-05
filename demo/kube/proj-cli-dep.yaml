@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ossprojddoscli
+  labels:
+    bu: eng
+spec:
+  replicas: 40
+  template:
+    metadata:
+      labels:
+        appname: ossprojddoscli
+        targetenv: demo
+    spec:
+      containers:
+      - name: ossprojddosclic
+        imagePullPolicy: Always
+        image: nsuke/tpydemocli:loop
+        ports:
+        - containerPort: 9090

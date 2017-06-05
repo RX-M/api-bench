@@ -37,7 +37,7 @@ def get_test(client):
 # --------------------------1 million create()---------------------------#
 def create_test(client):
     """Calls create() 1 million times"""
-    project = make_project("Thrift", "AFS", 10, 1, 2007)
+    project = make_project("Thrift", "ASF", 10, 1, 2007)
     start = time.time()
     for _ in range(REQUESTS):
         client.create(project)
@@ -49,7 +49,7 @@ def get_create_test(client):
     """Calls create(), then get() 1 million times"""
     start = time.time()
     for _ in range(REQUESTS):
-        project = make_project("Thrift", "AFS", 10, 1, 2007)
+        project = make_project("Thrift", "ASF", 10, 1, 2007)
         client.create(project)
         client.get("Thrift")
     end = time.time()
@@ -61,10 +61,14 @@ if __name__ == "__main__":
     PARSER.add_argument('-H', '--host', default='localhost')
     PARSER.add_argument('-p', '--port', default='9090')
     PARSER.add_argument('-a', '--action', default='1')
+    PARSER.add_argument('-N', '--no-accel', action='store_true')
     ARGS = vars(PARSER.parse_args())
     print("[Client] Host %s, Port %s, Action %s" %(ARGS['host'], ARGS['port'], ARGS['action']))
     TRANS = TTransport.TBufferedTransport(TSocket.TSocket(ARGS['host'], ARGS['port']))
-    PROTO = TCompactProtocol.TCompactProtocol(TRANS)
+    if ARGS['no_accel']:
+        PROTO = TCompactProtocol.TCompactProtocol(TRANS)
+    else:
+        PROTO = TCompactProtocol.TCompactProtocolAccelerated(TRANS, fallback=False)
     CLIENT = Projects.Client(PROTO)
     TRANS.open()
     if ARGS['action'] == '1':

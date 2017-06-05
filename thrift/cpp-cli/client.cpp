@@ -62,9 +62,10 @@ int main(int argc, char* argv[]) {
                 client.create(cr, p);
             break;
         case 3:
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 1000000; i++) {
                 client.create(cr, p);
                 client.get(p, name);
+            }
             break;
         }
     } catch(const TTransportException& te) {

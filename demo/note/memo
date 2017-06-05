@@ -1,0 +1,4 @@
+$ docker run --rm  -v $(pwd):/tmp/ thrift/thrift-compiler --gen py --out /tmp  /tmp/project.thrift 
+$ kubectl run pycli2 --image nsuke/tpydemocli:v1 --command -- tail -f /dev/null
+$ kubectl exec -it pycli2-2086532175-k7jxh --  /bin/sh
+$ python client.py --host ossproj.default.svc.cluster.local

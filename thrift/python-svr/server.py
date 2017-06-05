@@ -42,12 +42,16 @@ class ProjectHandler(Projects.Iface):
 
 PARSER = argparse.ArgumentParser()
 PARSER.add_argument('-p', '--port', default='9090')
+PARSER.add_argument('-N', '--no-accel', action='store_true')
 ARGS = vars(PARSER.parse_args())
 HANDLER = ProjectHandler()
 PROC = Projects.Processor(HANDLER)
 TRANS_SVR = TSocket.TServerSocket(port=ARGS['port'])
 TRANS_FAC = TTransport.TBufferedTransportFactory()
-PROTO_FAC = TCompactProtocol.TCompactProtocolFactory()
+if ARGS['no_accel']:
+    PROTO_FAC = TCompactProtocol.TCompactProtocolFactory()
+else:
+    PROTO_FAC = TCompactProtocol.TCompactProtocolAcceleratedFactory(fallback=False)
 SERVER = TServer.TThreadedServer(PROC, TRANS_SVR, TRANS_FAC, PROTO_FAC)
 
 print("[Server] Listening on port " + ARGS['port'])

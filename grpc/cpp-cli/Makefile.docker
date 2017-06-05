@@ -1,0 +1,24 @@
+TARGET = client
+IDL = ../projects.proto
+GRPC_PLUGIN = /usr/local/bin/grpc_cpp_plugin
+
+CC = g++
+CXXFLAGS = -Wall -Wextra -pedantic -Wno-unused-parameter -std=c++14
+
+all: $(TARGET)
+
+$(TARGET): projects.pb.o projects.grpc.pb.o
+	$(CC) -o $@ $(CXXFLAGS) client.cpp -Igen-cpp projects.pb.o projects.grpc.pb.o -lboost_program_options -lgrpc++_unsecure -lprotobuf
+
+gen-cpp/projects.pb.cc gen-cpp/projects.grpc.pb.cc:
+	mkdir -p gen-cpp
+	protoc --plugin=protoc-gen-grpc=$(GRPC_PLUGIN) -I.. $(IDL) --cpp_out gen-cpp --grpc_out=gen-cpp
+
+projects.grpc.pb.o: gen-cpp/projects.grpc.pb.cc
+	$(CC) $(CXXFLAGS) -c gen-cpp/projects.grpc.pb.cc -Igen-cpp
+
+projects.pb.o: gen-cpp/projects.pb.cc
+	$(CC) $(CXXFLAGS) -std=c++14 -c gen-cpp/projects.pb.cc -Igen-cpp
+
+clean:
+	$(RM) $(TARGET)

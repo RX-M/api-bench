@@ -99,7 +99,7 @@ kops create cluster \
     --master-count=1 \
     --master-zones=us-west-1c \
     --master-size=t2.xlarge \
-    --node-count=1 \
+    --node-count=2 \
     --zones=us-west-1c \
     --node-size=t2.xlarge \
     --associate-public-ip=true \
