@@ -11,6 +11,7 @@ struct Project {
     1: string name       //Proper project name
     2: string host       //Hosting/control foundation or company
     3: Date inception    //Date project was open sourced
+    4: i16 commits       //Number of commits
 }
 
 struct CreateResult {
