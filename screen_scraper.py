@@ -40,7 +40,7 @@ def get_inception(driver):
         date_link = "//*[@id='contents']/ul[contains(., 'Download')]/li[last()]"
         date = driver.find_element_by_xpath(date_link)
         return parse_inception(date.text)
-    except:
+    except :
         return "N/A"
 
 def get_description(driver, name):
@@ -85,7 +85,7 @@ def apache_projects():
         description = get_description(driver, name)
 
         description["Host"] = "Apache Software Foundation"
-        description["Name"] = name
+        description["Project Name"] = name
         description["Inception"] = inception
 
         projects.add(name, description)
