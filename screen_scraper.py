@@ -1,22 +1,15 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+"""Grabs information about Apache open source projects for DB"""
+from __future__ import print_function
 import time
 import ast
+from selenium import webdriver
 
-class Project():
-
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-class Projects():
+class Projects(object):
+    """Projects contains many individual project objects"""
 
     def __init__(self):
         self.projects = {}
-    
+
     def get(self, name):
         """Returns a new project with the given name"""
         try:
@@ -24,14 +17,53 @@ class Projects():
         except KeyError:
             print("No project called %s was found" %name)
 
-    def add(self, project):
+    def add(self, name, project):
         """Adds a project result"""
-        self.projects[project.name] = project
+        self.projects[name] = project
+
+def parse_inception(date):
+    """Parses the date from a string containing it + other info"""
+    start = 0
+    while date[start] != "(":
+        start += 1
+    end = start
+    while date[end] != ")":
+        end += 1
+    date = date[start+1:end].encode('utf-8')
+    date = date.split("-")
+    return {"day":int(date[2]), "year":int(date[0]), "month":int(date[1])}
+
+def get_inception(driver):
+    """Gets the inception date from a project"""
+    try:
+        # Get the line containing the last date
+        date_link = "//*[@id='contents']/ul[contains(., 'Download')]/li[last()]"
+        date = driver.find_element_by_xpath(date_link)
+        return parse_inception(date.text)
+    except:
+        return "N/A"
+
+def get_description(driver, name):
+    """Gets the description dict for a project"""
+    try:
+        # Get the url for the JSON DOAP
+        json_link = "//*[@id='contents']/ul[1]/li[contains(., 'Project data file')]/a[2]"
+        json = driver.find_element_by_xpath(json_link)
+        # Go to the JSON page
+        driver.get(json.get_attribute("href"))
+        # Add the JSON to the Project info
+        json_content = driver.find_element_by_xpath('/html/body/pre').text
+        description = ast.literal_eval(json_content)
+        print("Adding JSON for " + name)
+    except:
+        description = {}
+        print("Unable to scrape JSON for " + name)
+    return description
 
 def apache_projects():
-
+    """Scrapes apache project page for info on projects"""
     path_to_chromedriver = '/usr/local/bin/chromedriver'
-    driver = webdriver.Chrome(executable_path = path_to_chromedriver)
+    driver = webdriver.Chrome(executable_path=path_to_chromedriver)
     url = 'https://projects.apache.org/projects.html'
     driver.get(url)
     time.sleep(2)
@@ -44,29 +76,22 @@ def apache_projects():
         project_path = '//*[@id="list"]/ul/li[%d]/a' %i
         link = driver.find_element_by_xpath(project_path)
         name = link.text
+
         # Open the project page
         driver.get(link.get_attribute("href"))
         time.sleep(0.5)
-        # Get the url for the JSON DOAP
-        link = "//*[@id='contents']/ul[1]/li[contains(., 'Project data file')]/a[2]"
-        try:
-            json_link = driver.find_element_by_xpath(link)
-            # Go to the JSON page
-            driver.get(json_link.get_attribute("href"))
-            # Add the JSON to the Project info
-            json = driver.find_element_by_xpath('/html/body/pre').text
-            description = ast.literal_eval(json)
-            description["Host"] = "Apache Software Foundation"
-            print("Adding JSON for " + name)
-        except:
-            description = "None Available"
-            print("Unable to scrape JSON for " + name)
-        
-        project = Project(name, description)
-        projects.add(project)
+
+        inception = get_inception(driver)
+        description = get_description(driver, name)
+
+        description["Host"] = "Apache Software Foundation"
+        description["Name"] = name
+        description["Inception"] = inception
+
+        projects.add(name, description)
 
         # Reset the driver
         driver.get(url)
-        time.sleep(0.8) 
+        time.sleep(0.8)
 
 apache_projects()
