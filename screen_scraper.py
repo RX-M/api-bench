@@ -67,6 +67,6 @@ def apache_projects():
 
         # Reset the driver
         driver.get(url)
-        time.sleep(0.8)
+        time.sleep(0.8) 
 
 apache_projects()
