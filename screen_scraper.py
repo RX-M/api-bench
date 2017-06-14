@@ -2,6 +2,7 @@
 from __future__ import print_function
 import time
 import ast
+import httplib2
 from selenium import webdriver
 
 class Projects(object):
@@ -40,7 +41,7 @@ def get_inception(driver):
         date_link = "//*[@id='contents']/ul[contains(., 'Download')]/li[last()]"
         date = driver.find_element_by_xpath(date_link)
         return parse_inception(date.text)
-    except :
+    except:
         return "N/A"
 
 def get_description(driver, name):
@@ -64,8 +65,9 @@ def apache_projects():
     """Scrapes apache project page for info on projects"""
     path_to_chromedriver = '/usr/local/bin/chromedriver'
     driver = webdriver.Chrome(executable_path=path_to_chromedriver)
-    url = 'https://projects.apache.org/projects.html'
-    driver.get(url)
+    # go to the apache projects page
+    driver.get('https://projects.apache.org/projects.html')
+    # wait for the list of projects to load
     time.sleep(2)
     elem = driver.find_element_by_id('list')
     project_list = elem.text.split("\n")
@@ -83,15 +85,26 @@ def apache_projects():
 
         inception = get_inception(driver)
         description = get_description(driver, name)
+        # get the name without "Apache", make it lowercase, and add dashes
+        stripped_name = "-".join(name.lower().split(" ")[1:]).encode('utf-8')
+        github_mirror = "http://github.com/apache/" + stripped_name
 
+        http = httplib2.Http()
+        resp = http.request(github_mirror, 'HEAD')
+        # this means the github repo with the parsed url doesn't exist
+        if int(resp[0]['status']) >= 400:
+            github_mirror = "N/A"
+
+        description["GitHub Mirror"] = github_mirror
         description["Host"] = "Apache Software Foundation"
         description["Project Name"] = name
         description["Inception"] = inception
+        print(description)
 
         projects.add(name, description)
 
         # Reset the driver
-        driver.get(url)
+        driver.get('https://projects.apache.org/projects.html')
         time.sleep(0.8)
 
 apache_projects()
