@@ -6,7 +6,8 @@ import httplib2
 from selenium import webdriver
 
 class Projects(object):
-    """Projects contains many individual project objects"""
+    """Projects is a dictionary mapping project name to a JSON dict containg
+    info about it"""
     def __init__(self):
         self.projects = {}
 
@@ -53,6 +54,7 @@ def get_description(driver, name):
         driver.get(json.get_attribute("href"))
         # Add the JSON to the Project info
         json_content = driver.find_element_by_xpath('/html/body/pre').text
+        # Convert the JSON string to a dictionary
         description = ast.literal_eval(json_content)
         print("Adding JSON for " + name)
     except:
