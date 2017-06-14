@@ -7,7 +7,6 @@ from selenium import webdriver
 
 class Projects(object):
     """Projects contains many individual project objects"""
-
     def __init__(self):
         self.projects = {}
 
@@ -38,8 +37,8 @@ def get_inception(driver):
     """Gets the inception date from a project"""
     try:
         # Get the line containing the last date
-        date_link = "//*[@id='contents']/ul[contains(., 'Download')]/li[last()]"
-        date = driver.find_element_by_xpath(date_link)
+        xpath = "//*[@id='contents']/ul[contains(., 'Download')]/li[last()]"
+        date = driver.find_element_by_xpath(xpath)
         return parse_inception(date.text)
     except:
         return "N/A"
@@ -48,8 +47,8 @@ def get_description(driver, name):
     """Gets the description dict for a project"""
     try:
         # Get the url for the JSON DOAP
-        json_link = "//*[@id='contents']/ul[1]/li[contains(., 'Project data file')]/a[2]"
-        json = driver.find_element_by_xpath(json_link)
+        xpath = "//*[@id='contents']/ul[1]/li[contains(., 'Project data file')]/a[2]"
+        json = driver.find_element_by_xpath(xpath)
         # Go to the JSON page
         driver.get(json.get_attribute("href"))
         # Add the JSON to the Project info
@@ -63,48 +62,57 @@ def get_description(driver, name):
 
 def apache_projects():
     """Scrapes apache project page for info on projects"""
+    # path to where I have chrome driver installed
     path_to_chromedriver = '/usr/local/bin/chromedriver'
+    # initialize the driver
     driver = webdriver.Chrome(executable_path=path_to_chromedriver)
     # go to the apache projects page
     driver.get('https://projects.apache.org/projects.html')
     # wait for the list of projects to load
     time.sleep(2)
+
+    # get the HTML element with id list
     elem = driver.find_element_by_id('list')
     project_list = elem.text.split("\n")
+    # initialize an instance of Projects
     projects = Projects()
 
     for i in range(1, len(project_list) + 1):
         # Get the url of each project
-        project_path = '//*[@id="list"]/ul/li[%d]/a' %i
-        link = driver.find_element_by_xpath(project_path)
-        name = link.text
+        project_xpath = '//*[@id="list"]/ul/li[%d]/a' %i
+        # Get the HTML element that for the current project
+        project_link = driver.find_element_by_xpath(project_xpath)
+        project_name = project_link.text
 
         # Open the project page
-        driver.get(link.get_attribute("href"))
+        driver.get(project_link.get_attribute("href"))
+        # Wait for project page to load
         time.sleep(0.5)
 
         inception = get_inception(driver)
-        description = get_description(driver, name)
+        description = get_description(driver, project_name)
+
         # get the name without "Apache", make it lowercase, and add dashes
-        stripped_name = "-".join(name.lower().split(" ")[1:]).encode('utf-8')
+        stripped_name = "-".join(project_name.lower().split(" ")[1:]).encode('utf-8')
         github_mirror = "http://github.com/apache/" + stripped_name
 
-        http = httplib2.Http()
-        resp = http.request(github_mirror, 'HEAD')
+        # see if there's anything at the github url that was generated
+        resp = httplib2.Http().request(github_mirror, 'HEAD')
         # this means the github repo with the parsed url doesn't exist
         if int(resp[0]['status']) >= 400:
             github_mirror = "N/A"
 
+        # Add extra attributes to the JSON
         description["GitHub Mirror"] = github_mirror
         description["Host"] = "Apache Software Foundation"
-        description["Project Name"] = name
+        description["Project Name"] = project_name
         description["Inception"] = inception
-        print(description)
 
-        projects.add(name, description)
+        projects.add(project_name, description)
 
         # Reset the driver
         driver.get('https://projects.apache.org/projects.html')
         time.sleep(0.8)
 
-apache_projects()
+if __name__ == "__main__":
+    apache_projects()
