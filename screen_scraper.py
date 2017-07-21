@@ -79,7 +79,7 @@ def apache_projects():
     # initialize an instance of Projects
     projects = Projects()
 
-    for i in range(1, 3):
+    for i in range(1, len(project_list) + 1):
         # Get the url of each project
         project_xpath = '//*[@id="list"]/ul/li[%d]/a' %i
         # Get the HTML element that for the current project
