@@ -79,7 +79,7 @@ def apache_projects():
     # initialize an instance of Projects
     projects = Projects()
 
-    for i in range(1, len(project_list) + 1):
+    for i in range(1, 3):
         # Get the url of each project
         project_xpath = '//*[@id="list"]/ul/li[%d]/a' %i
         # Get the HTML element that for the current project
@@ -116,5 +116,15 @@ def apache_projects():
         driver.get('https://projects.apache.org/projects.html')
         time.sleep(0.8)
 
+    return projects
+
 if __name__ == "__main__":
-    apache_projects()
+    projects = apache_projects().projects
+    try:   
+        file = open("projects.json", 'w')
+        file.write(str(projects))
+        file.close()
+        print("Wrote JSON to projects.json")
+    except Exception as error: 
+        print(error)
+
