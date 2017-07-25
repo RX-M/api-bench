@@ -4,6 +4,7 @@ import time
 import ast
 import httplib2
 from selenium import webdriver
+from pyvirtualdisplay import Display
 
 class Projects(object):
     """Projects is a dictionary mapping project name to a JSON dict containg
@@ -32,7 +33,7 @@ def parse_inception(date):
         end += 1
     date = date[start+1:end].encode('utf-8')
     date = date.split("-")
-    return {"day":int(date[2]), "year":int(date[0]), "month":int(date[1])}
+    return {"day":date[2], "year":date[0], "month":date[1]}
 
 def get_inception(driver):
     """Gets the inception date from a project"""
@@ -42,7 +43,7 @@ def get_inception(driver):
         date = driver.find_element_by_xpath(xpath)
         return parse_inception(date.text)
     except:
-        return "N/A"
+        return {"day":"N/A", "year":"N/A", "month":"N/A"}
 
 def get_description(driver, name):
     """Gets the description dict for a project"""
@@ -55,15 +56,29 @@ def get_description(driver, name):
         # Add the JSON to the Project info
         json_content = driver.find_element_by_xpath('/html/body/pre').text
         # Convert the JSON string to a dictionary
-        description = ast.literal_eval(json_content)
+        json_info = ast.literal_eval(json_content)
         print("Adding JSON for " + name)
+        try:
+            description = json_info['description']
+        except KeyError:
+            description = "None"
+        try:
+            category = json_info['category']
+        except KeyError:
+            category = "None"
+        try: 
+            website = json_info['homepage']
+        except KeyError:
+            website = "None"
     except:
-        description = {}
+        description, category, website = "None", "None", "None"
         print("Unable to scrape JSON for " + name)
-    return description
+    return {"description":description, "category":category, "website":website}
 
 def apache_projects():
     """Scrapes apache project page for info on projects"""
+    display = Display(visible=0, size=(800, 800))  
+    display.start()
     # path to where I have chrome driver installed
     path_to_chromedriver = '/usr/local/bin/chromedriver'
     # initialize the driver
@@ -105,10 +120,12 @@ def apache_projects():
             github_mirror = "N/A"
 
         # Add extra attributes to the JSON
-        description["GitHub Mirror"] = github_mirror
-        description["Host"] = "Apache Software Foundation"
-        description["Project Name"] = project_name
-        description["Inception"] = inception
+        description["github"] = github_mirror
+        description["company"] = "Apache Software Foundation"
+        description["name"] = project_name
+        description["day"] = inception["day"]
+        description["month"] = inception["month"]
+        description["year"] = inception["year"]
 
         projects.add(project_name, description)
 
@@ -127,4 +144,5 @@ if __name__ == "__main__":
         print("Wrote JSON to projects.json")
     except Exception as error: 
         print(error)
+
 
